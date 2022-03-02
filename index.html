@@ -7,11 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue - sprint5</title>
     <link rel="stylesheet" href="./css/style.css">
-    <script defer src="./ts/app.js"></script>
+    <script defer type="module" src="./ts/app.js"></script>
 </head>
 
 <body>
-
+    <div class="container" id="container">
+        <aside>
+            <div class="weather" id="weather">
+                <div id="icon-weather"></div>
+                <div id="text-weather"></div>
+            </div>
+        </aside>
+        <div class="main">
+            <h1>Ready for laugh?</h1>
+            <p id="joke"></p>
+            <button id="button">Next Joke >></button>
+        </div>
+    </div>
 </body>
 
 </html>
