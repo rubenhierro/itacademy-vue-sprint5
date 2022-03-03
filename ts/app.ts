@@ -1,3 +1,5 @@
+// --- Class --- //
+
 interface Ijoke {
   id: string;
   joke: string;
@@ -31,7 +33,7 @@ const loadJokes = async () => {
       .then((response) => response.json())
       .then((data) => addJoke(data));
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 
@@ -41,7 +43,7 @@ const loadChuckJokes = async () => {
       .then((response) => response.json())
       .then((data) => addJoke(data));
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 
@@ -51,7 +53,7 @@ const loadWeather = async () => {
       .then((response) => response.json())
       .then((data) => printWeather(data));
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 // --- End API Calls --- //
@@ -80,7 +82,6 @@ const randomJoke = () => {
 const randomBlob = () => {
   const num: number = Math.round(Math.random() * 5);
   blob.style.backgroundImage = `url(../img/blob${num}.svg)`;
-  console.log(num);
 }
 
 const changeTextButton = () => {
@@ -89,7 +90,7 @@ const changeTextButton = () => {
 
 // --- Events --- //
 window.addEventListener('load', () => {
-  // loadWeather()
+  loadWeather()
   randomBlob();
 });
 
@@ -134,8 +135,10 @@ const printJoke = (obj): void => {
 
 function printWeather ({weather}): void {
     const [w] = weather;
-    //falta imatge
+    const img = w.icon;
+    const imgURL = `http://openweathermap.org/img/wn/${img}@2x.png`;
     textWeather.innerHTML = w.main;
+    iconWeather.innerHTML = `<img src="${imgURL}">`;
 }
 
 function vote(e: any): number {
@@ -156,7 +159,7 @@ function showEmoticons(): void {
 }
 
 function showMsg(msg, score): void {
-  alert(`${msg} El teu vot es: ${score}`)
+  alert(`${msg} Your score is: ${score}`)
 }
 
 function updateScore(): void {

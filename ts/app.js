@@ -1,3 +1,4 @@
+// --- Class --- //
 class Joke {
     id;
     joke;
@@ -22,7 +23,7 @@ const loadJokes = async () => {
             .then((data) => addJoke(data));
     }
     catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 };
 const loadChuckJokes = async () => {
@@ -32,7 +33,7 @@ const loadChuckJokes = async () => {
             .then((data) => addJoke(data));
     }
     catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 };
 const loadWeather = async () => {
@@ -42,7 +43,7 @@ const loadWeather = async () => {
             .then((data) => printWeather(data));
     }
     catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 };
 // --- End API Calls --- //
@@ -65,14 +66,13 @@ const randomJoke = () => {
 const randomBlob = () => {
     const num = Math.round(Math.random() * 5);
     blob.style.backgroundImage = `url(../img/blob${num}.svg)`;
-    console.log(num);
 };
 const changeTextButton = () => {
     button.innerHTML = 'Next Joke >>';
 };
 // --- Events --- //
 window.addEventListener('load', () => {
-    // loadWeather()
+    loadWeather();
     randomBlob();
 });
 nextJoke.addEventListener('click', () => {
@@ -111,8 +111,10 @@ const printJoke = (obj) => {
 };
 function printWeather({ weather }) {
     const [w] = weather;
-    //falta imatge
+    const img = w.icon;
+    const imgURL = `http://openweathermap.org/img/wn/${img}@2x.png`;
     textWeather.innerHTML = w.main;
+    iconWeather.innerHTML = `<img src="${imgURL}">`;
 }
 function vote(e) {
     let score = 0;
@@ -135,7 +137,7 @@ function showEmoticons() {
     emoticons.classList.replace('hide', 'show');
 }
 function showMsg(msg, score) {
-    alert(`${msg} El teu vot es: ${score}`);
+    alert(`${msg} Your score is: ${score}`);
 }
 function updateScore() {
     reportJokes.filter((i) => i.id === currentJokeId)
