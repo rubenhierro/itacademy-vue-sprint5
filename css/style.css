@@ -8,3 +8,20 @@
   min-height: 500px;
   margin: auto;
 }
+
+.emoticons {
+  display: flex;
+}
+.reaction {
+  min-width: 50px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: flex;
+}

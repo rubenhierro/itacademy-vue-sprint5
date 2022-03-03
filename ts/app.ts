@@ -1,3 +1,24 @@
+interface Ijoke {
+  id: string;
+  joke: string;
+  score: number;
+  date: string;
+}
+
+class Joke implements Ijoke {
+  id: string;
+  joke: string;
+  score: number;
+  date: string;
+
+  constructor(id: string, joke: string, score = 0, date: Date) {
+    this.id = id;
+    this.joke = joke;
+    this.score = score;
+    this.date = date.toISOString();
+  }
+}
+
 // --- API Calls --- //
 
 const loadJokes = async () => {
@@ -36,10 +57,17 @@ const loadWeather = async () => {
 // --- End API Calls --- //
 
 
-const nextJoke = document.getElementById('button');
-const joke = document.getElementById('joke');
-const iconWeather = document.getElementById('icon-weather');
-const textWeather = document.getElementById('text-weather');
+// --- Globals --- //
+const reportJokes: Array<Joke> = [];
+let currentJokeId: string;
+let isVoted: boolean = false;
+let score: number;
+
+const nextJoke: HTMLElement = document.getElementById('button');
+const joke: HTMLElement = document.getElementById('joke');
+const iconWeather: HTMLElement = document.getElementById('icon-weather');
+const textWeather: HTMLElement = document.getElementById('text-weather');
+const emoticons: HTMLElement = document.getElementById('emoticons');
 
 
 const randomJoke = () => {
@@ -49,23 +77,43 @@ const randomJoke = () => {
 
 // --- Events --- //
 window.addEventListener('load', () => {
-  loadWeather()
+  // loadWeather()
 });
 
 nextJoke.addEventListener('click', () => {
   randomJoke();
   printJoke(joke);
+  showEmoticons();
+  isVoted = false;
 });
 
-const printJoke = (text) => {
-  if (text.joke !== undefined) {
-    joke.innerHTML = text.joke;
+emoticons.addEventListener('click', (e) => {
+  if(!isVoted) {
+    score = vote(e.target);
+    updateScore();
+    isVoted = true;
+  }
+});
+
+const addJoke = (obj) => {
+  currentJokeId = obj.id;
+  const date: Date = new Date();
+  const joke: Joke = new Joke(obj.id, obj.joke || obj.value, obj.score, date);
+  reportJokes.push(joke);
+  console.log(reportJokes);
+};
+
+const printJoke = (obj) => {
+  if (obj.joke !== undefined) {
+    addJoke(obj);
+    joke.innerHTML = obj.joke;
   }
 };
 
-const printChuckJoke = (text) => {
-  if (text.value !== undefined) {
-    joke.innerHTML = text.value;
+const printChuckJoke = (obj) => {
+  if (obj.value !== undefined) {
+    addJoke(obj);
+    joke.innerHTML = obj.value;
   }
 }
 
@@ -73,5 +121,32 @@ function printWeather ({weather}) {
     const [w] = weather;
     //falta imatge
     textWeather.innerHTML = w.main;
+}
+
+function vote(e: any) {
+  let score: number = 0;
+  const msg: string = 'Thank you for vote. Have a nice day!';
+  switch(e.name) {
+    case 'vote-desagree': score = 1;  break;
+    case 'vote-normal': score = 2; break;
+    case 'vote-agree': score = 3; break;
+  }
+
+  showMsg(msg, score);
+  return score;
+}
+
+function showEmoticons() {
+  emoticons.classList.replace('hide', 'show');
+}
+
+function showMsg(msg, score) {
+  alert(`${msg} El teu vot es: ${score}`)
+}
+
+function updateScore() {
+  reportJokes.filter((i) => i.id === currentJokeId)
+  .map(i => i.score += score);
+  console.log(reportJokes);
 }
 
