@@ -29,7 +29,7 @@ const loadJokes = async () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => printJoke(data));
+      .then((data) => addJoke(data));
   } catch (error) {
     console.log(error);
   }
@@ -39,7 +39,7 @@ const loadChuckJokes = async () => {
   try {
     const loadChuckJokes = await fetch("https://api.chucknorris.io/jokes/random")
       .then((response) => response.json())
-      .then((data) => printChuckJoke(data));
+      .then((data) => addJoke(data));
   } catch (error) {
     console.log(error);
   }
@@ -68,6 +68,8 @@ const joke: HTMLElement = document.getElementById('joke');
 const iconWeather: HTMLElement = document.getElementById('icon-weather');
 const textWeather: HTMLElement = document.getElementById('text-weather');
 const emoticons: HTMLElement = document.getElementById('emoticons');
+const blob: HTMLElement = document.getElementById('blob');
+const button: HTMLElement = document.getElementById('button');
 
 
 const randomJoke = () => {
@@ -75,15 +77,27 @@ const randomJoke = () => {
   return flipCoin < 5 ? loadJokes() : loadChuckJokes();
 }
 
+const randomBlob = () => {
+  const num: number = Math.round(Math.random() * 5);
+  blob.style.backgroundImage = `url(../img/blob${num}.svg)`;
+  console.log(num);
+}
+
+const changeTextButton = () => {
+  button.innerHTML = 'Next Joke >>';
+}
+
 // --- Events --- //
 window.addEventListener('load', () => {
   // loadWeather()
+  randomBlob();
 });
 
 nextJoke.addEventListener('click', () => {
   randomJoke();
-  printJoke(joke);
+  randomBlob();
   showEmoticons();
+  changeTextButton();
   isVoted = false;
 });
 
@@ -95,35 +109,36 @@ emoticons.addEventListener('click', (e) => {
   }
 });
 
-const addJoke = (obj) => {
+const addJoke = (obj): void => {
   currentJokeId = obj.id;
+  let hasJoke = reportJokes.some(i => i.id === currentJokeId);
   const date: Date = new Date();
-  const joke: Joke = new Joke(obj.id, obj.joke || obj.value, obj.score, date);
-  reportJokes.push(joke);
+
+  if(!hasJoke) {
+    const joke: Joke = new Joke(obj.id, obj.joke || obj.value, obj.score, date);
+    reportJokes.push(joke);
+  } else {
+    reportJokes.filter(i => i.id === currentJokeId)
+    .map(i => i.date = date.toISOString())
+  }
+  
+  printJoke(obj);
   console.log(reportJokes);
 };
 
-const printJoke = (obj) => {
-  if (obj.joke !== undefined) {
-    addJoke(obj);
-    joke.innerHTML = obj.joke;
+const printJoke = (obj): void => {
+  if (obj.joke || obj.value !== undefined) {
+    joke.innerHTML = obj.joke || obj.value;
   }
 };
 
-const printChuckJoke = (obj) => {
-  if (obj.value !== undefined) {
-    addJoke(obj);
-    joke.innerHTML = obj.value;
-  }
-}
-
-function printWeather ({weather}) {
+function printWeather ({weather}): void {
     const [w] = weather;
     //falta imatge
     textWeather.innerHTML = w.main;
 }
 
-function vote(e: any) {
+function vote(e: any): number {
   let score: number = 0;
   const msg: string = 'Thank you for vote. Have a nice day!';
   switch(e.name) {
@@ -136,15 +151,15 @@ function vote(e: any) {
   return score;
 }
 
-function showEmoticons() {
+function showEmoticons(): void {
   emoticons.classList.replace('hide', 'show');
 }
 
-function showMsg(msg, score) {
+function showMsg(msg, score): void {
   alert(`${msg} El teu vot es: ${score}`)
 }
 
-function updateScore() {
+function updateScore(): void {
   reportJokes.filter((i) => i.id === currentJokeId)
   .map(i => i.score += score);
   console.log(reportJokes);
