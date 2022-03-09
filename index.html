@@ -7,17 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue - sprint5</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
     <script defer type="module" src="./ts/app.js"></script>
+
 </head>
 
 <body>
-    <div class="container" id="container">
-        <aside>
-            <div class="weather" id="weather">
-                <div id="icon-weather"></div>
-                <div id="text-weather"></div>
-            </div>
-        </aside>
+    <aside>
+        <div class="weather" id="weather">
+            <div id="icon-weather"></div>
+            <div id="text-weather"></div>
+        </div>
+    </aside>
+    <div class="container-main" id="container">
         <div class="main">
             <h1>Ready for laugh?</h1>
             <p id="joke"></p>
@@ -26,14 +30,16 @@
                     <a href="#"><img src="./img/emoticon-sad.svg" alt="Bad joke" name="vote-desagree"></a>
                 </div>
                 <div class="reaction" id="vote-normal">
-                    <a href="#"><img src="./img/emoticon-happy.svg" alt="Bad joke" name="vote-normal"></a>
+                    <a href="#"><img src="./img/emoticon-happy.svg" alt="Normal joke" name="vote-normal"></a>
                 </div>
                 <div class="reaction" id="vote-agree">
-                    <a href="#"><img src="./img/emoticon-laugh.svg" alt="Bad joke" name="vote-agree"></a>
+                    <a href="#"><img src="./img/emoticon-laugh.svg" alt="Good joke" name="vote-agree"></a>
                 </div>
             </div>
-            <button id="button">Next Joke >></button>
+            <!-- <button id="button">Next Joke >></button> -->
+            <a href="#" id="button">Start</a>
         </div>
+        <div class="blob" id="blob"></div>
     </div>
 </body>
 
